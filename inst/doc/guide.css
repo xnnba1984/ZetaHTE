@@ -1,0 +1,10 @@
+html { background: #fff; color: #191919; font: 16px/1.55 Arial, sans-serif; }
+body { max-width: 960px; margin: 32px auto; padding: 0 24px; }
+h1 { font-size: 26px; } h2 { font-size: 22px; } h3 { font-size: 19px; }
+h1, h2, h3 { line-height: 1.25; letter-spacing: 0; }
+a { color: #365b9d; } code, pre { font-family: monospace; font-size: 14px; }
+pre { padding: 14px; background: #f3f5f6; white-space: pre-wrap; overflow-wrap: anywhere; }
+p, td, code { overflow-wrap: anywhere; } table { border-collapse: collapse; max-width: 100%; }
+td, th { padding: 6px 12px 6px 0; text-align: left; vertical-align: top; }
+hr { border: 0; border-top: 1px solid #c5cad3; }
+@media (max-width: 600px) { body { margin: 16px auto; padding: 0 14px; } }

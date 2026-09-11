@@ -1,0 +1,8 @@
+export(zeta_test)
+export(zeta_interpret)
+S3method(print,zeta_test)
+S3method(summary,zeta_test)
+S3method(print,summary.zeta_test)
+S3method(print,zeta_interpretation)
+S3method(plot,zeta_test)
+S3method(plot,zeta_interpretation)

@@ -1,0 +1,80 @@
+<!DOCTYPE html><html><head><title>R: Guide 2: Binary Outcomes and a User Cutoff</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<link rel="stylesheet" type="text/css" href="guide.css">
+</head><body><div class="container"><main>
+
+<table style="width: 100%;"><tr><td>zeta_binary_guide {ZetaHTE}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Guide 2: Binary Outcomes and a User Cutoff</h2>
+
+<h3>Description</h3>
+
+<p>Analyze a binary response and describe a prespecified positive-tail
+split. All data in this guide are synthetic.</p>
+
+
+<h3>Details</h3>
+
+<p>Use 1 for a favorable response and 0 otherwise. The test uses the same linear
+working model as for continuous outcomes. Heterogeneity is on the risk-difference
+scale, not the odds-ratio scale. Outcome coding and effect scale matter.
+</p>
+<p>A user cutoff changes descriptive grouping only. It does not change the global
+test, the three channel tests, or the scan grid. Zero is kept separate. With
+<code>cutoff_inclusive = "upper"</code>, the positive groups are
+0 &lt; X &lt; cutoff and X &gt;= cutoff. The default <code>"lower"</code> instead uses
+0 &lt; X &lt;= cutoff and X &gt; cutoff. Choose the boundary convention before inspecting
+results. The numerical value 10 here is an example, not a clinical recommendation.
+</p>
+<p>In the result tables, binary means and differences remain on the probability
+scale. Group plots multiply means by 100; contrast plots multiply differences
+by 100. No additional resampling occurs. Groups are overlapping descriptions,
+not independent analyses. A group lacking one treatment arm has no estimable
+treatment difference; its reason is retained.
+</p>
+
+
+<h3>Study interpretation</h3>
+
+<p>The primary target is a two-arm randomized study. These functions do not add
+confounder adjustment to an observational comparison. A small global p value
+supports further investigation of treatment effect heterogeneity; the selected
+split and effect summaries remain exploratory. Patient-level stability bootstrap,
+external calibration, and the paper's family q values are separate analyses.</p>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="zeta_interpret.html">zeta_interpret</a></code>, <code><a href="zeta_plots.html">zeta_plots</a></code>,
+<code><a href="zeta_reproduction.html">zeta_reproduction</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class='language-R'>library(ZetaHTE)
+set.seed(202)
+x &lt;- rep(c(0, 2, 5, 8, 10, 12, 15, 20, 25), each = 40)
+a &lt;- rep(0:1, length(x) / 2)
+probability &lt;- 0.15 + a * (0.05 + 0.6 * (x &gt;= 10))
+y &lt;- rbinom(length(x), size = 1, prob = probability)
+fit &lt;- zeta_test(y, a, x, outcome = "binary", B = 999, seed = 73)
+print(fit)
+plot(fit)
+
+if (fit$p_global &lt;= 0.05) {
+  explanation &lt;- zeta_interpret(fit, cutoff = 10, cutoff_inclusive = "upper")
+  print(explanation$user_cutoff_rule)
+  print(explanation$groups)
+  print(explanation$effects)
+  stopifnot(sum(explanation$groups$n_treatment[5:6]) == sum(a == 1 &amp; x &gt; 0))
+  stopifnot(sum(explanation$groups$n_control[5:6]) == sum(a == 0 &amp; x &gt; 0))
+  plot(explanation, type = "groups", cex = 0.85)
+  plot(explanation, type = "contrasts")
+}
+</code></pre>
+
+<hr><div style="text-align: center;">[Package <em>ZetaHTE</em> version 0.1.0 <a href="index.html">Index</a>]</div></main>
+
+</div>
+</body></html>

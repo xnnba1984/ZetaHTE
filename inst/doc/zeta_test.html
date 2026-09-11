@@ -1,0 +1,177 @@
+<!DOCTYPE html><html><head><title>R: Test Treatment Effect Heterogeneity with a Semicontinuous...</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+<link rel="stylesheet" type="text/css" href="guide.css">
+</head><body><div class="container"><main>
+
+<table style="width: 100%;"><tr><td>zeta_test {ZetaHTE}</td><td style="text-align: right;">R Documentation</td></tr></table>
+
+<h2>Test Treatment Effect Heterogeneity with a Semicontinuous Biomarker</h2>
+
+<h3>Description</h3>
+
+<p>The global ZETA test with Jump, Tail linear,
+and Tail step scan channels, jointly calibrated by a residual wild bootstrap.</p>
+
+
+<h3>Usage</h3>
+
+<pre><code class='language-R'>zeta_test(y, a, x, outcome = c("continuous", "binary"), B = 999L,
+  seed = NULL, zero_threshold = 0,
+  na_action = c("fail", "omit"), keep_bootstrap = FALSE)
+</code></pre>
+
+
+<h3>Arguments</h3>
+
+<table role = "presentation">
+<tr><td><code id="y">y</code></td>
+<td>
+<p>Numeric outcome vector. Larger values represent more favorable outcomes.
+Binary outcomes must be coded 0/1.</p>
+</td></tr>
+<tr><td><code id="a">a</code></td>
+<td>
+<p>Numeric or logical treatment vector, coded 1 for treatment and 0 for
+control. At least two complete subjects in each arm are required.</p>
+</td></tr>
+<tr><td><code id="x">x</code></td>
+<td>
+<p>Finite nonnegative numeric biomarker vector. Factors and matrices are
+not accepted. Average ranks are used for tied positive values.</p>
+</td></tr>
+<tr><td><code id="outcome">outcome</code></td>
+<td>
+<p>Outcome type. Binary outcomes use the same linear working model,
+with effects interpreted on the risk-difference scale.</p>
+</td></tr>
+<tr><td><code id="B">B</code></td>
+<td>
+<p>Number of internal bootstrap samples, an integer of at least two.
+The default is 999; settings below 199 warn about coarse resolution.</p>
+</td></tr>
+<tr><td><code id="seed">seed</code></td>
+<td>
+<p>Optional nonnegative integer random seed. An explicit seed restores
+the previous random-number state after the call. With NULL, the usual R random
+stream is advanced. Explicit seeds are rejected with the Box-Muller normal
+generator or a user-supplied RNG because their hidden state cannot safely be
+restored. In those cases, call set.seed() yourself and use seed = NULL.</p>
+</td></tr>
+<tr><td><code id="zero_threshold">zero_threshold</code></td>
+<td>
+<p>Prespecified nonnegative threshold. Values at or below
+this threshold are recoded to zero; larger values retain their original scale.</p>
+</td></tr>
+<tr><td><code id="na_action">na_action</code></td>
+<td>
+<p>Fail on missing values, or omit rows incomplete in any of the
+three input vectors. Omitted row indices are recorded. Infinity is an error.</p>
+</td></tr>
+<tr><td><code id="keep_bootstrap">keep_bootstrap</code></td>
+<td>
+<p>Retain the matrix of bootstrap channel statistics.</p>
+</td></tr>
+</table>
+
+
+<h3>Details</h3>
+
+<p>The five basis directions are Jump, Tail linear, and three positive-tail steps
+at the fixed ranks 0.35, 0.5, and 0.65.
+Jump requires at least four zero and eight positive subjects; Tail
+linear requires eight positive subjects. Each step requires at least five
+positive subjects on each side. Constant residualized directions are omitted.
+These are inherited computational availability rules, not sample-size guarantees.
+If at least one channel is available, joint calibration uses the available
+channels. All three channel rows are returned, with NA and a reason for missing
+channels. An entirely unevaluable test returns NA, not a nonsignificant p value.
+</p>
+<p>Scores use the sample variance of residual products and a variance floor of
+1e-8. Bootstrap samples independently flip residual signs, regress the signed
+residuals on the original null predictors, and recompute all available channels.
+Sparse and Dense statistics are auxiliary combinations, not signal classifiers.
+Their bootstrap upper-tail proportions and the final lower-tail minimum
+calibration use inclusive comparisons and plus-one corrections. For each
+bootstrap combination statistic, its reference includes itself, exactly as in
+the research runners. If a channel bootstrap standard deviation is at most
+1e-8, its scale is set to 1 and a diagnostic is emitted, preserving the research
+implementation.
+</p>
+<p>The residual-variation check uses the centered outcome scale. If the absolute
+outcome mean exceeds 1e8 times the largest centered absolute outcome, this
+common offset is removed before the null fit and recorded in diagnostics.
+An intercept makes this a numerical stabilization, not a change in the model.
+This cannot recover precision already lost in the input. Very small outcome
+scales can activate the variance floor. Use numerically reasonable outcome units.
+</p>
+<p>The target is one biomarker and two treatments. Causal interpretation depends
+on the study design; this function does not adjust for observational confounding.
+It does not perform the paper's additional real-data permutation/shuffling
+calibration, candidate-family multiplicity adjustment, or patient bootstrap.
+</p>
+
+
+<h3>Value</h3>
+
+<p>An object of class <code>zeta_test</code> containing:
+</p>
+<table role = "presentation">
+<tr><td><code>p_global</code>, <code>status</code>, <code>reason</code></td>
+<td>
+<p>Global p value and evaluation status.</p>
+</td></tr>
+<tr><td><code>channels</code></td>
+<td>
+<p>Three rows with identifiers, labels, observed statistics,
+standardized evidence, exploratory p values, availability, and reasons.</p>
+</td></tr>
+<tr><td><code>scan</code></td>
+<td>
+<p>Three prespecified rank locations with observed statistics and the
+largest lower-group and smallest upper-group biomarker values. These boundary
+values describe an interval, not a uniquely estimated clinical cutoff.</p>
+</td></tr>
+<tr><td><code>combinations</code></td>
+<td>
+<p>Sparse and Dense statistics and auxiliary p values.</p>
+</td></tr>
+<tr><td><code>settings</code>, <code>diagnostics</code></td>
+<td>
+<p>Parameters, random-number kind, sample counts,
+omissions, model rank, and numerical diagnostics.</p>
+</td></tr>
+<tr><td><code>data</code></td>
+<td>
+<p>Complete analysis rows, including original and recoded biomarker
+values, ranks, and original row indices. This object contains subject-level data;
+do not publish it without permission. Nothing is transmitted or saved by the function.</p>
+</td></tr>
+<tr><td><code>bootstrap</code></td>
+<td>
+<p>Bootstrap channel matrix when requested, otherwise NULL.</p>
+</td></tr>
+</table>
+
+
+<h3>See Also</h3>
+
+<p><code><a href="zeta_interpret.html">zeta_interpret</a></code></p>
+
+
+<h3>Examples</h3>
+
+<pre><code class='language-R'>set.seed(12)
+x &lt;- c(rep(0, 40), runif(80))
+a &lt;- rep(0:1, 60)
+y &lt;- rnorm(120) + a * (0.3 + 3 * x)
+fit &lt;- zeta_test(y, a, x, B = 199, seed = 42)
+fit
+fit$channels
+summary(fit)
+</code></pre>
+
+<hr><div style="text-align: center;">[Package <em>ZetaHTE</em> version 0.1.0 <a href="index.html">Index</a>]</div></main>
+
+</div>
+</body></html>

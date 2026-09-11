@@ -1,0 +1,12 @@
+cff-version: 1.2.0
+message: "Please cite this software when using ZetaHTE."
+type: software
+title: "ZetaHTE: Zero and Tail Treatment Effect Heterogeneity Test"
+authors:
+  - family-names: Xi
+    given-names: Miles
+    email: nxi@ucla.edu
+version: 0.1.0
+license: MIT
+repository-code: "https://github.com/xnnba1984/ZetaHTE"
+url: "https://github.com/xnnba1984/ZetaHTE"

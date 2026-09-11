@@ -1,0 +1,8 @@
+bibentry(
+  bibtype = "Manual",
+  title = "ZetaHTE: Zero and Tail Treatment Effect Heterogeneity Test",
+  author = person("Miles", "Xi"),
+  year = "2026",
+  note = "R package version 0.1.0",
+  url = "https://github.com/xnnba1984/ZetaHTE"
+)

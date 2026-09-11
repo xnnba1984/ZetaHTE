@@ -1,0 +1,17 @@
+Package: ZetaHTE
+Type: Package
+Title: Zero and Tail Treatment Effect Heterogeneity Test
+Version: 0.1.0
+Authors@R: person("Miles", "Xi", email = "nxi@ucla.edu",
+    role = c("aut", "cre"))
+Description: Implements the ZETA test for treatment effect
+    heterogeneity with a semicontinuous biomarker. Combines zero mass and
+    positive tail channels using a residual wild bootstrap, and provides
+    descriptive interpretation after a significant global test.
+License: MIT + file LICENSE
+URL: https://github.com/xnnba1984/ZetaHTE
+BugReports: https://github.com/xnnba1984/ZetaHTE/issues
+Encoding: UTF-8
+Depends: R (>= 4.1.0)
+Imports: stats, graphics, grDevices
+NeedsCompilation: no
