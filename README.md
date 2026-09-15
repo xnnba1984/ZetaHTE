@@ -135,4 +135,3 @@ the [MIT license](LICENSE.md).
 Author and maintainer: Miles Xi, [nxi@ucla.edu](mailto:nxi@ucla.edu).
 Report reproducible software problems through
 [GitHub Issues](https://github.com/xnnba1984/ZetaHTE/issues).
-Do not post confidential or identifiable data in an issue.
